@@ -1,0 +1,27 @@
+{
+    "name": "arthurzanella/bagisto-wirecard",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Arthur Zanella",
+            "email": "arthurzanella@gmail.com"
+        }
+    ],
+    "require": {
+        "moip/moip-sdk-php": "^3.1"
+        
+    },
+    "autoload": {
+        "psr-4": {
+            "ArthurZanella\\Wirecard\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ArthurZanella\\Wirecard\\Providers\\WirecardServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
