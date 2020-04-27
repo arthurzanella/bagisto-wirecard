@@ -19,7 +19,7 @@
 @section('content-wrapper')
 
 
-<div class="auth-content">
+<div class="auth-content" style="padding-top:0px;">
 
     <form method="post" action="{{ route('wirecard.pay') }}" @submit.prevent="onSubmit">
 
@@ -51,25 +51,25 @@ SQIDAQAB
 
             <div class="control-group" :class="[errors.has('number') ? 'has-error' : '']">
                 <label for="number">{{ __('Number') }}</label>
-                <input type="text" class="control" name="number" id="number" value="5555666677778884" v-validate="'required'" >
+                <input type="text" class="control" name="number" id="number" value="5555666677778884" v-validate="'required'" onkeyup="getHash()">
                 <span class="control-error" v-if="errors.has('number')">@{{ errors.first('number') }}</span>
             </div>
 
             <div class="control-group" :class="[errors.has('month') ? 'has-error' : '']">
                 <label for="month">{{ __('Month') }}</label>
-                <input type="text" class="control" name="month" id="month" value="12" v-validate="'required'" >
+                <input type="text" class="control" name="month" id="month" value="12" v-validate="'required'" onkeyup="getHash()">
                 <span class="control-error" v-if="errors.has('month')">@{{ errors.first('month') }}</span>
             </div>
 
             <div class="control-group" :class="[errors.has('year') ? 'has-error' : '']">
                 <label for="year">{{ __('Year') }}</label>
-                <input type="text" class="control" name="year" id="year" value="2022" v-validate="'required'" >
+                <input type="text" class="control" name="year" id="year" value="2022" v-validate="'required'" onkeyup="getHash()">
                 <span class="control-error" v-if="errors.has('year')">@{{ errors.first('year') }}</span>
             </div>
 
             <div class="control-group" :class="[errors.has('cvc') ? 'has-error' : '']">
                 <label for="cvc">{{ __('CVC') }}</label>
-                <input type="text" class="control" name="cvc" id="cvc" value="123" v-validate="'required'" >
+                <input type="text" class="control" name="cvc" id="cvc" value="123" v-validate="'required'" onkeyup="getHash()">
                 <span class="control-error" v-if="errors.has('cvc')">@{{ errors.first('cvc') }}</span>
             </div>
 
@@ -90,15 +90,15 @@ SQIDAQAB
 
             <hr>
 
-            <!-- <div class="control-group" style="margin-bottom: 0px;">
+            <div class="control-group" style="margin-bottom: 0px;">
                 <div class="form-check">
                     <label class="form-check-label">
-                        <input id="holder_check" type="checkbox" class="form-check-input" value="">Editar endereço de cobrança
+                        <input id="holder_check" type="checkbox" class="form-check-input" value="" onchange="changeHolder()">Editar endereço de cobrança
                     </label>
                 </div>
             </div>
 
-            <div id="holder_div" class="card-body pt-0" style="display: block;">
+            <div id="holder_div" class="card-body pt-0" style="display: none;">
 
                 <h3>Dados do proprietário do cartão de crédito</h3>
 
@@ -177,7 +177,7 @@ SQIDAQAB
                 <input type="hidden" class="form-control" name="hash" id="hash" placeholder="" required="">
                 <input type="hidden" class="form-control" name="brand" id="brand" placeholder="" required="">
 
-            </div> -->
+            </div>
 
         </div>
     </form>
@@ -191,48 +191,42 @@ SQIDAQAB
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
     <!-- gerar hash wirecard -->
     <script type="text/javascript">
-
-        jQuery(document).ready(function(){
-
-            function getHash() {
-                var cc = new Moip.CreditCard({
-                    number  : $("#number").val(),
-                    cvc     : $("#cvc").val(),
-                    expMonth: $("#month").val(),
-                    expYear : $("#year").val(),
-                    pubKey  : $("#public_key").val()
-                });
-                console.log(cc);
-                if(cc.isValid()){
-                    $("#hash").val(cc.hash());
-                    $("#brand").val(cc.cardType());
-                    $("#loading").prop('disabled', false);
-                }
-                else{
-                    $("#hash").val('');
-                    $("#brand").val('');
-                    $("#loading").prop('disabled', true);
-                    console.log('Invalid credit card. Verify parameters: number, cvc, expiration Month, expiration Year');
-                }
-            };
-            $("#deeplink").click(function() {
-                window.location.replace("wirecard://payment?paymentId=1093019888&paymentType=debit&amount=10&installmentType=1&installments=3&scheme=instore");
+        function getHash() {
+            var cc = new Moip.CreditCard({
+                number  : $("#number").val(),
+                cvc     : $("#cvc").val(),
+                expMonth: $("#month").val(),
+                expYear : $("#year").val(),
+                pubKey  : $("#public_key").val()
             });
-            $("#number").keyup(function() {
-                getHash();
-            });
-            $("#cvc").keyup(function() {
-                getHash();
-            });
-            $("#month").keyup(function() {
-                getHash();
-            });
-            $("#year").keyup(function() {
-                getHash();
-            });
-
+            console.log(cc);
+            if(cc.isValid()){
+                $("#hash").val(cc.hash());
+                $("#brand").val(cc.cardType());
+                $("#loading").prop('disabled', false);
+                console.log('Valid credit card');
+                console.log(cc.hash());
+            }
+            else{
+                $("#hash").val('');
+                $("#brand").val('');
+                $("#loading").prop('disabled', true);
+                console.log('Invalid credit card. Verify parameters: number, cvc, expiration Month, expiration Year');
+            }
+        };
+        $("#deeplink").click(function() {
+            window.location.replace("wirecard://payment?paymentId=1093019888&paymentType=debit&amount=10&installmentType=1&installments=3&scheme=instore");
         });
-        getHash();
     </script>
-    
+    <!-- mostrar div holder -->
+    <script type="text/javascript">
+        function changeHolder() {
+            if ($('#holder_check').prop('checked')) {
+                $('#holder_div').show();
+            } else {
+                $('#holder_div').hide();
+            }
+        }
+    </script>
+        
 @endpush
