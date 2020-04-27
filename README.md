@@ -1,2 +1,2 @@
 # bagisto-wirecard
-Módulo Wirecard para Bagisto
+Módulo Wirecard para Bagisto - Em desenvolvimento
