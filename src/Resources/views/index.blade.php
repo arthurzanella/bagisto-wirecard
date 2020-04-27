@@ -1,7 +1,7 @@
 @extends('shop::layouts.master')
 
 @section('page_title')
-    {{ __('Wirecard - Dados para pagamento') }}
+    {{ __('Wirecard') }}
 @stop
 
 
@@ -27,10 +27,10 @@
 
         <div class="login-form">
 
-            <div class="login-text">Dados cartão</div>
+            <div class="login-text">{{ __('Credit card') }}</div>
 
-            <div class="control-group" :class="[errors.has('public_key') ? 'has-error' : '']">
-                <label for="public_key">{{ __('public_key') }}</label>
+            <div class="control-group" :class="[errors.has('public_key') ? 'has-error' : '']" style="display:none">
+                <label for="public_key">{{ __('Public key') }}</label>
                 <textarea name="public_key" id="public_key" class="control" style="">-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApoTLQKM7kpPOvCH3Fjyq
 i4X1KSet3xRJhYpwdjUM/D7VjNqciwOu6AH7t2AVorERY8BxzbWbkuFkvHJTo1zA
@@ -44,31 +44,31 @@ SQIDAQAB
             </div>
 
             <div class="control-group" :class="[errors.has('holder') ? 'has-error' : '']">
-                <label for="holder">{{ __('holder') }}</label>
+                <label for="holder">{{ __('Holder') }}</label>
                 <input type="text" class="control" name="holder" id="holder" value="JOAO NINGUEM" v-validate="'required'">
                 <span class="control-error" v-if="errors.has('holder')">@{{ errors.first('holder') }}</span>
             </div>
 
             <div class="control-group" :class="[errors.has('number') ? 'has-error' : '']">
-                <label for="number">{{ __('number') }}</label>
+                <label for="number">{{ __('Number') }}</label>
                 <input type="text" class="control" name="number" id="number" value="5555666677778884" v-validate="'required'" >
                 <span class="control-error" v-if="errors.has('number')">@{{ errors.first('number') }}</span>
             </div>
 
             <div class="control-group" :class="[errors.has('month') ? 'has-error' : '']">
-                <label for="month">{{ __('month') }}</label>
+                <label for="month">{{ __('Month') }}</label>
                 <input type="text" class="control" name="month" id="month" value="12" v-validate="'required'" >
                 <span class="control-error" v-if="errors.has('month')">@{{ errors.first('month') }}</span>
             </div>
 
             <div class="control-group" :class="[errors.has('year') ? 'has-error' : '']">
-                <label for="year">{{ __('year') }}</label>
+                <label for="year">{{ __('Year') }}</label>
                 <input type="text" class="control" name="year" id="year" value="2022" v-validate="'required'" >
                 <span class="control-error" v-if="errors.has('year')">@{{ errors.first('year') }}</span>
             </div>
 
             <div class="control-group" :class="[errors.has('cvc') ? 'has-error' : '']">
-                <label for="cvc">{{ __('cvc') }}</label>
+                <label for="cvc">{{ __('CVC') }}</label>
                 <input type="text" class="control" name="cvc" id="cvc" value="123" v-validate="'required'" >
                 <span class="control-error" v-if="errors.has('cvc')">@{{ errors.first('cvc') }}</span>
             </div>
@@ -77,20 +77,20 @@ SQIDAQAB
 
             <div class="button-group">
                 <button type="submit" class="btn btn-lg btn-primary">
-                    {{ __('finalizar-pagamento') }}
+                    {{ __('Pay') }}
                 </button>
             </div>
 
             <div class="control-group" style="margin-bottom: 0px;">
                 <a href="{{ route('wirecard.cancel') }}">
                     <i class="icon primary-back-icon"></i>
-                    {{ __('cancelar-pedido') }}
+                    {{ __('Cancel') }}
                 </a>
             </div>            
 
             <hr>
 
-            <div class="control-group" style="margin-bottom: 0px;">
+            <!-- <div class="control-group" style="margin-bottom: 0px;">
                 <div class="form-check">
                     <label class="form-check-label">
                         <input id="holder_check" type="checkbox" class="form-check-input" value="">Editar endereço de cobrança
@@ -177,12 +177,7 @@ SQIDAQAB
                 <input type="hidden" class="form-control" name="hash" id="hash" placeholder="" required="">
                 <input type="hidden" class="form-control" name="brand" id="brand" placeholder="" required="">
 
-            </div>
-
-
-
-
-            
+            </div> -->
 
         </div>
     </form>
@@ -192,29 +187,13 @@ SQIDAQAB
 
 
 @push('scripts')
+    <script type="text/javascript" src="https://assets.moip.com.br/v2/moip.min.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="//assets.moip.com.br/v2/moip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" integrity="sha256-Kg2zTcFO9LXOc7IwcBx1YeUBJmekycsnTsq2RuFHSZU=" crossorigin="anonymous"></script>
-    <!-- masks phone, cpf, ddd -->
-    <script>
-        $(document).ready(function($){
-            var SPMaskBehavior = function (val) {
-                return val.replace(/\D/g, '').length === 11 ? '(00)00000-0000' : '(00)0000-00009';
-            },
-            spOptions = {
-                onKeyPress: function(val, e, field, options) {
-                    field.mask(SPMaskBehavior.apply({}, arguments), options);
-                }
-            };
-            $('#phone').mask(SPMaskBehavior, spOptions);
-            $('#holder_cpf').mask('000.000.000-00', {reverse: false});
-            $('#holder_phone_ddd').mask('00', {reverse: false});
-            $('#holder_phone_phone').mask('000000009', {reverse: false});
-        });
-    </script>
     <!-- gerar hash wirecard -->
     <script type="text/javascript">
-        $(document).ready(function() {
+
+        jQuery(document).ready(function(){
+
             function getHash() {
                 var cc = new Moip.CreditCard({
                     number  : $("#number").val(),
@@ -224,7 +203,7 @@ SQIDAQAB
                     pubKey  : $("#public_key").val()
                 });
                 console.log(cc);
-                if( cc.isValid()){
+                if(cc.isValid()){
                     $("#hash").val(cc.hash());
                     $("#brand").val(cc.cardType());
                     $("#loading").prop('disabled', false);
@@ -251,21 +230,9 @@ SQIDAQAB
             $("#year").keyup(function() {
                 getHash();
             });
+
         });
-    </script>
-    <!-- exibe campo para editar holder -->
-    <script>
-        $(document).ready(function() {
-            $('#holder_check').change(function() {
-                if ($('#holder_check').prop('checked')) {
-                    $('#holder_div').show();
-                    console.log('a');
-                } else {
-                    $('#holder_div').hide();
-                    console.log('b');
-                }
-            });
-        });
+        getHash();
     </script>
     
 @endpush

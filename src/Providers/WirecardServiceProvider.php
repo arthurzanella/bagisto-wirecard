@@ -25,6 +25,8 @@ class WirecardServiceProvider extends ServiceProvider
             dirname(__DIR__) . '/Config/system.php', 'core'
         );
 
+        $this->loadJSONTranslationsFrom(__DIR__ . '/../Resources/lang');
+
         $this->mergeConfigFrom(
             dirname(__DIR__) . '/Config/paymentmethods.php', 'paymentmethods'
         );
