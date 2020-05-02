@@ -29,6 +29,12 @@ return [
                 'validation' => 'required',
                 'info' => ''
             ], [
+                'name' => 'store_name',
+                'title' => 'Store name',
+                'type' => 'text',
+                'validation' => 'required',
+                'info' => ''
+            ], [
                 'name' => 'public_key',
                 'title' => 'Public Key',
                 'type' => 'textarea',

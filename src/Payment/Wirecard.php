@@ -38,6 +38,7 @@ class Wirecard extends Payment
         $this->token = $this->getConfigData('token');
         $this->key = $this->getConfigData('key');
         $this->sandbox = $this->getConfigData('sandbox');
+        $this->store_name = $this->getConfigData('store_name');
     }
 
     /**
@@ -52,6 +53,10 @@ class Wirecard extends Payment
         if (!$this->key) {
             throw new Exception('Wirecard: Para usar essa opção de pagamento você precisa informar a Key de pagamento!');
         }
+
+        // if (!$this->key) {
+        //     throw new Exception('Wirecard: Para usar essa opção de pagamento você precisa informar a Key de pagamento!');
+        // }
 
         if (!$this->getCart()) {
             throw new Exception('Wirecard: Adicione produtos ao carrinho para realizar o pagamento!');
@@ -122,6 +127,7 @@ class Wirecard extends Payment
 
         $token = $this->token;
         $key = $this->key;
+        $store_name = $this->store_name;
 
         if($this->sandbox == true){
             $endpoint = Moip::ENDPOINT_SANDBOX;
@@ -203,7 +209,7 @@ class Wirecard extends Payment
             $payment = $order->payments()
                 ->setCreditCardHash($hash, $holder)
                 ->setInstallmentCount(1)
-                ->setStatementDescriptor("efoods.store")
+                ->setStatementDescriptor($store_name)
                 //->setDelayCapture()
                 ->execute();
         } catch (\Moip\Exceptions\UnautorizedException $e) {
