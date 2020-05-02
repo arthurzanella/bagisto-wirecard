@@ -8,5 +8,19 @@
     "Year": "Ano",
     "CVC": "Verificação",
     "Pay": "Pagar",
-    "Cancel": "Cancelar"
+    "Cancel": "Cancelar",
+    "Edit credit card holder": "Editar endereço do cartão de credito",
+    "Credit card holder": "Dados do proprietário do cartão de crédito",
+    "Holder full name": "Nome escrito no cartão",
+    "Holder birt date": "Nascimento",
+    "Holder CPF": "CPF",
+    "Holder phone DDD": "DDD",
+    "Holder phone number": "Telefone",
+    "Holder address street": "Endereço",
+    "Holder address number": "Número",
+    "Holder address district": "Bairro",
+    "Holder address city": "Cidade",
+    "Holder address state code": "UF",
+    "Holder address zip": "CEP",
+    "Holder address complemento": "Complemento"
 }
