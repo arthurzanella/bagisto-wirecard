@@ -31,14 +31,23 @@ class Wirecard extends Payment
     protected $client;
 
     /**
+     * @var Helper
+     */
+    protected $helper;
+
+    /**
      * Wirecard constructor.
      */
-    public function __construct()
+    public function __construct(
+        Helper $helper
+    )
     {
         $this->token = $this->getConfigData('token');
         $this->key = $this->getConfigData('key');
         $this->sandbox = $this->getConfigData('sandbox');
         $this->store_name = $this->getConfigData('store_name');
+        $this->helper = $helper;
+        $this->currentUser = auth()->guard('customer')->user();
     }
 
     /**
@@ -135,19 +144,6 @@ class Wirecard extends Payment
             $endpoint = Moip::ENDPOINT_PRODUCTION;
         }
 
-        //criar variavel ddd do telefone
-        $ddd = $billingAddress->phone;
-        $ddd = preg_replace('/[(]/ui', '', $ddd);
-        $ddd = preg_replace('/[)]/ui', '', $ddd);
-        $ddd = preg_replace('/[-]/ui', '', $ddd);
-        $ddd = substr($ddd, 0, 2);
-
-        //cenverte telefone apenas para numero em ddd
-        $billingAddress->phone = preg_replace('/[(]/ui', '', $billingAddress->phone);
-        $billingAddress->phone = preg_replace('/[)]/ui', '', $billingAddress->phone);
-        $billingAddress->phone = preg_replace('/[-]/ui', '', $billingAddress->phone);
-        $billingAddress->phone = substr($billingAddress->phone, 2);
-
         $moip = new Moip(new BasicAuth($token, $key), $endpoint);
 
         // adress1 = rua
@@ -155,21 +151,37 @@ class Wirecard extends Payment
         // adress3 = bairro
         // adress4 = complemento
 
+        $document = $this->helper->documentParser($this->currentUser->document);
+        $ddd = $this->helper->getDDD($billingAddress->phone);
+        $phone = $this->helper->getPhoneNumber($billingAddress->phone);
+
         try {
             $customer = $moip->customers()->setOwnId(uniqid())
                 ->setFullname($cart->customer_first_name.' '.$cart->customer_last_name)
                 ->setEmail($cart->customer_email)
-                ->setBirthDate('1990-10-10')
-                ->setTaxDocument('447.350.710-67')
-                ->setPhone($ddd, $billingAddress->phone)
-                ->addAddress('BILLING',
-                    $billingAddress->address1, (is_int($billingAddress->address2)) ? $billingAddress->address2 : 1,
-                    'Centro', $billingAddress->city, $billingAddress->state,
-                    $billingAddress->postcode, 8)
-                ->addAddress('SHIPPING',
-                    $shippingAddress->address1, (is_int($shippingAddress->address2)) ? $shippingAddress->address2 : 1,
-                    'Centro', $shippingAddress->city, $shippingAddress->state,
-                    $shippingAddress->postcode, 8)
+                ->setBirthDate($this->currentUser->date_of_birth)
+                ->setTaxDocument($document)
+                ->setPhone($ddd, $phone)
+                ->addAddress(
+                    'BILLING',
+                    $billingAddress->address1,
+                    $billingAddress->address2,
+                    $billingAddress->address3 ?: '',
+                    $billingAddress->city,
+                    $billingAddress->state,
+                    $billingAddress->postcode,
+                    $billingAddress->address4 ?: ''
+                )
+                ->addAddress(
+                    'SHIPPING',
+                    $shippingAddress->address1,
+                    $shippingAddress->address2,
+                    $shippingAddress->address3 ?: '',
+                    $shippingAddress->city,
+                    $shippingAddress->state,
+                    $shippingAddress->postcode,
+                    $shippingAddress->address4 ?: ''
+                )
                 ->create();
         } catch (Exception $e) {
             dd($e->__toString());

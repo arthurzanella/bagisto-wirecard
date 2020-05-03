@@ -162,4 +162,43 @@ class Helper
         return ['ddi' => $ddi, 'ddd' => $ddd, 'number' => $number];
     }
 
+    /**
+     * @param $document
+     * @return string|string[]
+     */
+    public function documentParser ($document)
+    {
+        return str_replace(str_split('-.'), '', $document);
+    }
+
+    /**
+     * @param $phone
+     * @param int $num
+     * @return mixed
+     */
+    public function splitPhone ($phone, $num = 2) {
+        $length = strlen($phone);
+        $output[0] = substr($phone, 0, $num);
+        $output[1] = substr($phone, $num, $length );
+        return $output;
+    }
+
+    public function getDDD ($phone) {
+        $ddd = $phone;
+        $ddd = preg_replace('/[(]/ui', '', $ddd);
+        $ddd = preg_replace('/[)]/ui', '', $ddd);
+        $ddd = preg_replace('/[-]/ui', '', $ddd);
+        $ddd = substr($ddd, 0, 2);
+        return $ddd;
+    }
+
+    public function getPhoneNumber ($phone) {
+        $phoneNumber = $phone;
+        $phoneNumber = preg_replace('/[(]/ui', '', $phoneNumber);
+        $phoneNumber = preg_replace('/[)]/ui', '', $phoneNumber);
+        $phoneNumber = preg_replace('/[-]/ui', '', $phoneNumber);
+        $phoneNumber = substr($phoneNumber, 2);
+        return $phoneNumber;
+    }
+
 }

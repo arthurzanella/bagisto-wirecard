@@ -45,7 +45,7 @@ SQIDAQAB
 
             <div class="control-group" :class="[errors.has('holder') ? 'has-error' : '']">
                 <label for="holder">{{ __('Holder') }}</label>
-                <input type="text" class="control" name="holder" id="holder" value="JOAO NINGUEM" v-validate="'required'">
+                <input type="text" class="control" name="holder" id="holder" value="{{ $user->name }}" v-validate="'required'">
                 <span class="control-error" v-if="errors.has('holder')">@{{ errors.first('holder') }}</span>
             </div>
 
@@ -88,7 +88,7 @@ SQIDAQAB
                 </a>
             </div>            
 
-            <hr>
+            <!-- <hr>
 
             <div class="control-group" style="margin-bottom: 0px;">
                 <div class="form-check">
@@ -104,75 +104,75 @@ SQIDAQAB
 
                 <div class="control-group" :class="[errors.has('holder_full_name') ? 'has-error' : '']">
                     <label for="holder_full_name">{{ __('Holder full name') }}</label>
-                    <input type="text" class="control" name="holder_full_name" id="holder_full_name" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_full_name" id="holder_full_name" value="{{ $user->name }}" v-validate="'required'" >
                     <span class="control-error" v-if="errors.has('holder_full_name')">@{{ errors.first('holder_full_name') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_birt_date') ? 'has-error' : '']">
                     <label for="holder_birt_date">{{ __('Holder birt date') }}</label>
-                    <input type="text" class="control" name="holder_birt_date" id="holder_birt_date" value="" v-validate="'required'" >
+                    <input type="date" class="control" name="holder_birt_date" id="holder_birt_date" value="{{ $user->date_of_birth }}" v-validate="'required'" >
                     <span class="control-error" v-if="errors.has('holder_birt_date')">@{{ errors.first('holder_birt_date') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_cpf') ? 'has-error' : '']">
                     <label for="holder_cpf">{{ __('Holder CPF') }}</label>
-                    <input type="text" class="control" name="holder_cpf" id="holder_cpf" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_cpf" id="holder_cpf" value="{{ $user->document }}" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_cpf')">@{{ errors.first('holder_cpf') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_phone_ddd') ? 'has-error' : '']">
                     <label for="holder_phone_ddd">{{ __('Holder phone DDD') }}</label>
-                    <input type="text" class="control" name="holder_phone_ddd" id="holder_phone_ddd" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_phone_ddd" id="holder_phone_ddd" value="" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_phone_ddd')">@{{ errors.first('holder_phone_ddd') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_phone_number') ? 'has-error' : '']">
                     <label for="holder_phone_number">{{ __('Holder phone number') }}</label>
-                    <input type="text" class="control" name="holder_phone_number" id="holder_phone_number" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_phone_number" id="holder_phone_number" value="" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_phone_number')">@{{ errors.first('holder_phone_number') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_address_street') ? 'has-error' : '']">
                     <label for="holder_address_street">{{ __('Holder address street') }}</label>
-                    <input type="text" class="control" name="holder_address_street" id="holder_address_street" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_address_street" id="holder_address_street" value="" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_address_street')">@{{ errors.first('holder_address_street') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_address_number') ? 'has-error' : '']">
                     <label for="holder_address_number">{{ __('Holder address number') }}</label>
-                    <input type="text" class="control" name="holder_address_number" id="holder_address_number" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_address_number" id="holder_address_number" value="" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_address_number')">@{{ errors.first('holder_address_number') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_address_district') ? 'has-error' : '']">
                     <label for="holder_address_district">{{ __('Holder address district') }}</label>
-                    <input type="text" class="control" name="holder_address_district" id="holder_address_district" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_address_district" id="holder_address_district" value="" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_address_district')">@{{ errors.first('holder_address_district') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_address_city') ? 'has-error' : '']">
                     <label for="holder_address_city">{{ __('Holder address city') }}</label>
-                    <input type="text" class="control" name="holder_address_city" id="holder_address_city" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_address_city" id="holder_address_city" value="" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_address_city')">@{{ errors.first('holder_address_city') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_address_state_code') ? 'has-error' : '']">
                     <label for="holder_address_state_code">{{ __('Holder address state code') }}</label>
-                    <input type="text" class="control" name="holder_address_state_code" id="holder_address_state_code" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_address_state_code" id="holder_address_state_code" value="" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_address_state_code')">@{{ errors.first('holder_address_state_code') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_address_zip') ? 'has-error' : '']">
                     <label for="holder_address_zip">{{ __('Holder address zip') }}</label>
-                    <input type="text" class="control" name="holder_address_zip" id="holder_address_zip" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_address_zip" id="holder_address_zip" value="" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_address_zip')">@{{ errors.first('holder_address_zip') }}</span>
                 </div>
 
                 <div class="control-group" :class="[errors.has('holder_address_complemento') ? 'has-error' : '']">
                     <label for="holder_address_complemento">{{ __('Holder address complemento') }}</label>
-                    <input type="text" class="control" name="holder_address_complemento" id="holder_address_complemento" value="" v-validate="'required'" >
+                    <input type="text" class="control" name="holder_address_complemento" id="holder_address_complemento" value="" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_address_complemento')">@{{ errors.first('holder_address_complemento') }}</span>
-                </div>
+                </div> -->
 
                 <input type="hidden" class="form-control" name="hash" id="hash" placeholder="" required="">
                 <input type="hidden" class="form-control" name="brand" id="brand" placeholder="" required="">

@@ -55,6 +55,7 @@ class WirecardController extends Controller
         $this->orderRepository = $orderRepository;
         $this->helper = $helper;
         $this->wirecard = $wirecard;
+        $this->currentUser = auth()->guard('customer')->user();
     }
 
     /**
@@ -63,7 +64,7 @@ class WirecardController extends Controller
      */
     public function index()
     {
-        return view('wirecard::index');
+        return view('wirecard::index', ['user' => $this->currentUser, 'billingAddress' => '']);
     }
 
     /**
