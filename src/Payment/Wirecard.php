@@ -3,6 +3,7 @@
 namespace ArthurZanella\Wirecard\Payment;
 
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Carbon;
 use ArthurZanella\Wirecard\Helper\Helper;
 use Exception;
 use Illuminate\Support\Facades\Log;
@@ -51,6 +52,15 @@ class Wirecard extends Payment
     }
 
     /**
+     * @param $dob
+     * @return |null
+     */
+    public function validateCustomerDob($dob)
+    {
+        return strtotime(Carbon::parse($dob)) < 0 ? null : $dob;
+    }
+
+    /**
      * @throws Exception
      */
     public function paymentRequest()
@@ -63,9 +73,9 @@ class Wirecard extends Payment
             throw new Exception('Wirecard: Para usar essa opção de pagamento você precisa informar a Key de pagamento!');
         }
 
-        // if (!$this->key) {
-        //     throw new Exception('Wirecard: Para usar essa opção de pagamento você precisa informar a Key de pagamento!');
-        // }
+        if (!$this->validateCustomerDob($this->currentUser->date_of_birth)) {
+            throw new RuntimeException('Wirecard: Please update your account with Date of birth information.');
+        }
 
         if (!$this->getCart()) {
             throw new Exception('Wirecard: Adicione produtos ao carrinho para realizar o pagamento!');
