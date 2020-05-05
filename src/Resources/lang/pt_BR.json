@@ -22,5 +22,6 @@
     "Holder address city": "Cidade",
     "Holder address state code": "UF",
     "Holder address zip": "CEP",
-    "Holder address complemento": "Complemento"
+    "Holder address complemento": "Complemento",
+    "Wirecard payment status": "Situação pagamento"
 }

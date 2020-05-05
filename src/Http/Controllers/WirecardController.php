@@ -16,6 +16,7 @@ use Moip\Moip;
 use Moip\Auth\BasicAuth;
 use Webkul\Checkout\Facades\Cart;
 use Webkul\Sales\Repositories\OrderRepository;
+use ArthurZanella\Wirecard\Repositories\WirecardRepository;
 
 /**
  * Class WirecardController

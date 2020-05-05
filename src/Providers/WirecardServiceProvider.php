@@ -3,6 +3,7 @@
 namespace ArthurZanella\Wirecard\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Routing\Router;
 
 /**
  * Class WirecardServiceProvider
@@ -30,5 +31,8 @@ class WirecardServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             dirname(__DIR__) . '/Config/paymentmethods.php', 'paymentmethods'
         );
+
+        $this->app->register(EventServiceProvider::class);
+
     }
 }
