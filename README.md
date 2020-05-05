@@ -20,15 +20,15 @@ Configurações disponíveis:
 * **Key**: Key fornecido pelo Wirecard.
 * **Public Key**: Public Key fornecido pelo Wirecard.
 
-![Image](../../screenshots/wirecard1.PNG)
+![Image](https://raw.githubusercontent.com/arthurzanella/bagisto-wirecard/master/screenshots/wirecard1.PNG)
 
-![Image](../../screenshots/wirecard2.PNG)
+![Image](https://raw.githubusercontent.com/arthurzanella/bagisto-wirecard/master/screenshots/wirecard2.PNG)
 
-![Image](../../screenshots/wirecard3.PNG)
+![Image](https://raw.githubusercontent.com/arthurzanella/bagisto-wirecard/master/screenshots/wirecard3.PNG)
 
-![Image](../../screenshots/wirecard4.PNG)
+![Image](https://raw.githubusercontent.com/arthurzanella/bagisto-wirecard/master/screenshots/wirecard4.PNG)
 
-![Image](../../screenshots/wirecard5.PNG)
+![Image](https://raw.githubusercontent.com/arthurzanella/bagisto-wirecard/master/screenshots/wirecard5.PNG)
 
 ## Me pague uma cerveja:
 
