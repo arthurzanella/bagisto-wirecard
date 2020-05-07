@@ -81,13 +81,6 @@ SQIDAQAB
                 </button>
             </div>
 
-            <div class="control-group" style="margin-bottom: 0px;">
-                <a href="{{ route('wirecard.cancel') }}">
-                    <i class="icon primary-back-icon"></i>
-                    {{ __('Cancel') }}
-                </a>
-            </div>            
-
             <!-- <hr>
 
             <div class="control-group" style="margin-bottom: 0px;">
@@ -174,7 +167,19 @@ SQIDAQAB
                     <span class="control-error" v-if="errors.has('holder_address_complemento')">@{{ errors.first('holder_address_complemento') }}</span>
                 </div> -->
 
-                <input type="hidden" class="form-control" name="hash" id="hash" placeholder="" required="">
+                <div class="control-group" :class="[errors.has('hash') ? 'has-error' : '']">
+                    <input type="hidden" class="control" name="hash" id="hash" value="" v-validate="'required'">
+                    <!-- <span class="control-error" v-if="errors.has('hash')">@{{ errors.first('hash') }}</span> -->
+                    <b><span class="control-error" v-if="errors.has('hash')">Confira os dados do cartão de crédito e tente novamente.</span></b>
+                </div>
+
+                <div class="control-group" style="margin-bottom: 0px;">
+                    <a href="{{ route('wirecard.cancel') }}">
+                        <i class="icon primary-back-icon"></i>
+                        {{ __('Cancel') }}
+                    </a>
+                </div>
+
                 <input type="hidden" class="form-control" name="brand" id="brand" placeholder="" required="">
 
             </div>

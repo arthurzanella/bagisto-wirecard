@@ -63,7 +63,7 @@ class Wirecard extends Payment
     /**
      * @throws Exception
      */
-    public function paymentRequest()
+    public function paymentRequest($hash)
     {
         if (!$this->token) {
             throw new Exception('Wirecard: Para usar essa opção de pagamento você precisa informar o Token pagamento!');
@@ -225,8 +225,7 @@ class Wirecard extends Payment
                 ->setPhone(11, 66778899, 55)
                 ->setAddress('BILLING', 'Avenida Faria Lima', '2927', 'Itaim', 'Sao Paulo', 'SP', '01234000', 'Apt 101');
             
-            //$hash = $request->hash;
-            $hash = "KT7VjDwy2CUInoAtA6i/4xO/hjsCT+gD0AeU9By0+VvFSRvkf5A7h+gvoqNrG/WdXDhUNqgpAsnkQQ1n0BkDoUzUHSfMiAnZKR7tWm/oO8QGX69o+kcnztfbkUHcrNSzHTDHX/2OVYT0GPQpsZX0wUbqwcdTa9FzaMuce44f79g66kpv/ax6upWbCx4dCJgeYkOQkpYgchhYTJgvgvRgqZHjZafDw6fWle5UrF/5uybuzISp6hR7s1qIsU9JPZdaA7fEqHz/8Gr5/G7Ot5W8S2BO3DsIz4fZ0E8bgc+E6GH2ywc8JO3PlcH4hE6hMZmUqRDK3/Nq9b1+IczeUym+Dg==";
+            //$hash = "KT7VjDwy2CUInoAtA6i/4xO/hjsCT+gD0AeU9By0+VvFSRvkf5A7h+gvoqNrG/WdXDhUNqgpAsnkQQ1n0BkDoUzUHSfMiAnZKR7tWm/oO8QGX69o+kcnztfbkUHcrNSzHTDHX/2OVYT0GPQpsZX0wUbqwcdTa9FzaMuce44f79g66kpv/ax6upWbCx4dCJgeYkOQkpYgchhYTJgvgvRgqZHjZafDw6fWle5UrF/5uybuzISp6hR7s1qIsU9JPZdaA7fEqHz/8Gr5/G7Ot5W8S2BO3DsIz4fZ0E8bgc+E6GH2ywc8JO3PlcH4hE6hMZmUqRDK3/Nq9b1+IczeUym+Dg==";
             
             $payment = $order->payments()
                 ->setCreditCardHash($hash, $holder)

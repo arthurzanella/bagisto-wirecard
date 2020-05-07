@@ -74,10 +74,10 @@ class WirecardController extends Controller
      * 
      * @return RedirectResponse
      */
-    public function pay()
+    public function pay(Request $request)
     {
         try {
-            $redirect = $this->wirecard->paymentRequest();
+            $redirect = $this->wirecard->paymentRequest($request->hash);
             return redirect()->route('wirecard.success');
         } catch (\Exception $e) {
             session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());
