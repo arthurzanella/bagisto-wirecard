@@ -28,11 +28,15 @@ class WirecardServiceProvider extends ServiceProvider
 
         $this->loadJSONTranslationsFrom(__DIR__ . '/../Resources/lang');
 
+        $this->loadMigrationsFrom(__DIR__ . '/../Database/migrations');
+
         $this->mergeConfigFrom(
             dirname(__DIR__) . '/Config/paymentmethods.php', 'paymentmethods'
         );
 
         $this->app->register(EventServiceProvider::class);
+
+        $this->app->register(ModuleServiceProvider::class);
 
     }
 }

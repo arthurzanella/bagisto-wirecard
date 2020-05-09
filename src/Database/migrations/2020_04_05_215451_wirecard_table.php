@@ -16,8 +16,9 @@ class WirecardTable extends Migration
         Schema::create('wirecard', function (Blueprint $table) {
             $table->increments('id');
             $table->string('order_id');
-            $table->string('status');
-            $table->string('type')->nullable();
+            $table->string('status')->nullable();
+            $table->string('reference')->nullable();
+            $table->string('event')->nullable();
             $table->timestamps();
         });
     }

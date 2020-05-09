@@ -8,7 +8,8 @@
 @push('css')
     <style>
         .button-group {
-            margin-bottom: 25px;
+            margin-bottom: 10px;
+            margin-top: 10px;
         }
         .primary-back-icon {
             vertical-align: middle;
@@ -55,16 +56,18 @@ SQIDAQAB
                 <span class="control-error" v-if="errors.has('number')">@{{ errors.first('number') }}</span>
             </div>
 
-            <div class="control-group" :class="[errors.has('month') ? 'has-error' : '']">
-                <label for="month">{{ __('Month') }}</label>
-                <input type="text" class="control" name="month" id="month" value="12" v-validate="'required'" onkeyup="getHash()">
-                <span class="control-error" v-if="errors.has('month')">@{{ errors.first('month') }}</span>
-            </div>
-
-            <div class="control-group" :class="[errors.has('year') ? 'has-error' : '']">
-                <label for="year">{{ __('Year') }}</label>
-                <input type="text" class="control" name="year" id="year" value="2022" v-validate="'required'" onkeyup="getHash()">
-                <span class="control-error" v-if="errors.has('year')">@{{ errors.first('year') }}</span>
+            <div class="control-group" style="display: flex;" :class="[errors.has('month') ? 'has-error' : '']">
+                <div style="width: 50%; padding-right: 0.5rem;">
+                    <label for="month">{{ __('Month') }}</label>
+                    <input type="text" class="control" name="month" id="month" value="12" v-validate="'required'" onkeyup="getHash()">
+                    <span class="control-error" v-if="errors.has('month')">@{{ errors.first('month') }}</span>
+                </div>
+                <div style="width: 50%; padding-left: 0.5rem;">
+                    <label for="year">{{ __('Year') }}</label>
+                    <input type="text" class="control" name="year" id="year" value="2022" v-validate="'required'" onkeyup="getHash()">
+                    <span class="control-error" v-if="errors.has('year')">@{{ errors.first('year') }}</span>
+                </div>
+                
             </div>
 
             <div class="control-group" :class="[errors.has('cvc') ? 'has-error' : '']">
@@ -72,8 +75,6 @@ SQIDAQAB
                 <input type="text" class="control" name="cvc" id="cvc" value="123" v-validate="'required'" onkeyup="getHash()">
                 <span class="control-error" v-if="errors.has('cvc')">@{{ errors.first('cvc') }}</span>
             </div>
-
-            <small class="text-secondary text-center">Pagamento processado através do Wirecard.</small>
 
             <div class="button-group">
                 <button type="submit" class="btn btn-lg btn-primary">
@@ -179,6 +180,8 @@ SQIDAQAB
                         {{ __('Cancel') }}
                     </a>
                 </div>
+
+                <small class="text-secondary text-center">Pagamento processado através do Wirecard.</small>
 
                 <input type="hidden" class="form-control" name="brand" id="brand" placeholder="" required="">
 

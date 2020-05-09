@@ -220,10 +220,19 @@ class Wirecard extends Payment
 
         try {
             $holder = $moip->holders()->setFullname($cart->customer_first_name.' '.$cart->customer_last_name)
-                ->setBirthDate("1990-10-10")
-                ->setTaxDocument('22222222222', 'CPF')
-                ->setPhone(11, 66778899, 55)
-                ->setAddress('BILLING', 'Avenida Faria Lima', '2927', 'Itaim', 'Sao Paulo', 'SP', '01234000', 'Apt 101');
+                ->setBirthDate($this->currentUser->date_of_birth)
+                ->setTaxDocument($document, 'CPF')
+                ->setPhone($ddd, $phone, 55)
+                ->setAddress(
+                    'BILLING',
+                    $shippingAddress->address1 ?: '',
+                    $shippingAddress->address2 ?: '',
+                    $shippingAddress->address3 ?: '',
+                    $shippingAddress->city ?: '',
+                    $shippingAddress->state ?: '',
+                    $shippingAddress->postcode ?: '',
+                    $shippingAddress->address4 ?: ''
+                );
             
             //$hash = "KT7VjDwy2CUInoAtA6i/4xO/hjsCT+gD0AeU9By0+VvFSRvkf5A7h+gvoqNrG/WdXDhUNqgpAsnkQQ1n0BkDoUzUHSfMiAnZKR7tWm/oO8QGX69o+kcnztfbkUHcrNSzHTDHX/2OVYT0GPQpsZX0wUbqwcdTa9FzaMuce44f79g66kpv/ax6upWbCx4dCJgeYkOQkpYgchhYTJgvgvRgqZHjZafDw6fWle5UrF/5uybuzISp6hR7s1qIsU9JPZdaA7fEqHz/8Gr5/G7Ot5W8S2BO3DsIz4fZ0E8bgc+E6GH2ywc8JO3PlcH4hE6hMZmUqRDK3/Nq9b1+IczeUym+Dg==";
             
@@ -245,7 +254,7 @@ class Wirecard extends Payment
         }
 
         //aguardo ok de pagamento antes de consultar
-        sleep(2);
+        //sleep(1);
 
         //se tiver erro no pagamento ou pagamento for recusado
         if(!isset($payment)){
@@ -257,22 +266,125 @@ class Wirecard extends Payment
         }
 
         //consulta status do pagamento
-        $payment_status = $moip->payments()->get($payment->getId());
+        //$payment_status = $moip->payments()->get($payment->getId());
 
         //direciona para sucesso
-        return route('wirecard.success');
+        //return $payment->getStatus();
+        return $order->getOwnId();
+        //ownId
+        //return route('wirecard.success');
 
     }
 
     /**
-     * Return form wirecard.index array
+     * Get ownId from webhooks notifications
      *
      * @return array
      */
-    public function getFields()
+    public function getOwnIdNotify($request)
     {
-
+        return $request->getOwnId();
     }
+
+    /**
+     * Create webhooks notifications
+     *
+     * @return array
+     */
+    public function createWebhook()
+    {
+        if (!$this->token) {
+            throw new Exception('Wirecard: Informar o Token pagamento!');
+        }
+
+        if (!$this->key) {
+            throw new Exception('Wirecard: Informar a Key de pagamento!');
+        }
+
+        $token = $this->token;
+        $key = $this->key;
+        $store_name = $this->store_name;
+
+        if($this->sandbox == true){
+            $endpoint = Moip::ENDPOINT_SANDBOX;
+        } else {
+            $endpoint = Moip::ENDPOINT_PRODUCTION;
+        }
+
+        $moip = new Moip(new BasicAuth($token, $key), $endpoint);
+
+        $notification = $moip->notifications()
+            ->addEvent("ORDER.*")
+            //->addEvent("PAYMENT.*")
+            ->setTarget("https://enxqdbzzs1k8n.x.pipedream.net")
+            ->create();
+
+        dd($notification);
+    }
+
+    /**
+     * List webhooks notifications
+     *
+     * @return array
+     */
+    public function listWebhook()
+    {
+        if (!$this->token) {
+            throw new Exception('Wirecard: Informar o Token pagamento!');
+        }
+
+        if (!$this->key) {
+            throw new Exception('Wirecard: Informar a Key de pagamento!');
+        }
+
+        $token = $this->token;
+        $key = $this->key;
+        $store_name = $this->store_name;
+
+        if($this->sandbox == true){
+            $endpoint = Moip::ENDPOINT_SANDBOX;
+        } else {
+            $endpoint = Moip::ENDPOINT_PRODUCTION;
+        }
+
+        $moip = new Moip(new BasicAuth($token, $key), $endpoint);
+
+        $notifications = $moip->notifications()->getList();
+
+        dd($notifications);
+    }
+
+    /**
+     * Delete webhooks notifications
+     *
+     * @return array
+     */
+    public function deleteWebhook($notification_id)
+    {
+        if (!$this->token) {
+            throw new Exception('Wirecard: Informar o Token pagamento!');
+        }
+
+        if (!$this->key) {
+            throw new Exception('Wirecard: Informar a Key de pagamento!');
+        }
+
+        $token = $this->token;
+        $key = $this->key;
+        $store_name = $this->store_name;
+
+        if($this->sandbox == true){
+            $endpoint = Moip::ENDPOINT_SANDBOX;
+        } else {
+            $endpoint = Moip::ENDPOINT_PRODUCTION;
+        }
+
+        $moip = new Moip(new BasicAuth($token, $key), $endpoint);
+
+        $notification = $moip->notifications()->delete($notification_id);
+
+        dd($notification);
+    }   
 
     /**
      * @return string
@@ -281,5 +393,5 @@ class Wirecard extends Payment
     {
         return route('wirecard.index');
     }
-    
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Webkul\Wirecard\Contracts;
+namespace ArthurZanella\Wirecard\Contracts;
 
 interface Wirecard
 {

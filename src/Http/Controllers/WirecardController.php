@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Config;
 use Illuminate\View\View;
 use InvalidArgumentException;
 use Moip\Moip;
@@ -32,6 +33,13 @@ class WirecardController extends Controller
     protected $orderRepository;
 
     /**
+     * WirecardRepository object
+     *
+     * @var WirecardRepository
+     */
+    protected $wirecardRepository;
+
+    /**
      * @var Helper
      */
     protected $helper;
@@ -45,15 +53,18 @@ class WirecardController extends Controller
      * Create a new controller instance.
      *
      * @param OrderRepository $orderRepository
+     * @param WirecardRepository $wirecardRepository
      * @param Helper $helper
      */
     public function __construct(
         OrderRepository $orderRepository,
+        WirecardRepository $wirecardRepository,
         Helper $helper,
         Wirecard $wirecard
     )
     {
         $this->orderRepository = $orderRepository;
+        $this->wirecardRepository = $wirecardRepository;
         $this->helper = $helper;
         $this->wirecard = $wirecard;
         $this->currentUser = auth()->guard('customer')->user();
@@ -77,8 +88,9 @@ class WirecardController extends Controller
     public function pay(Request $request)
     {
         try {
-            $redirect = $this->wirecard->paymentRequest($request->hash);
-            return redirect()->route('wirecard.success');
+            //$redirect = $this->wirecard->paymentRequest($request->hash);
+            $payment = $this->wirecard->paymentRequest($request->hash);
+            return redirect()->route('wirecard.success', ['reference' => $payment]);
         } catch (\Exception $e) {
             session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());
             //session()->flash('error', 'Ocorreu um problema ao efetuar o pagamento, tente novamente mais tarde.');
@@ -103,12 +115,15 @@ class WirecardController extends Controller
      * @return RedirectResponse
      * @throws Exception
      */
-    public function success(Request $request, Wirecard $wirecard)
+    public function success($reference)
     {
         /**
          * @var \Webkul\Sales\Models\Order $order
          */
         $order = $this->orderRepository->create(Cart::prepareDataForOrder());
+
+        //criar um registro de status na tabela 'wirecard'
+        $status = $this->wirecardRepository->createStatus($order->id, null, $reference);
 
         Cart::deActivateCart();
 
@@ -123,6 +138,46 @@ class WirecardController extends Controller
      */
     public function notify(Request $request, Wirecard $wirecard)
     {
-
+        try {
+            $reference = $this->wirecard->getOwnIdNotify($request);
+            $order_id = $wirecardRepository->getOrderId($reference);
+            $event = 'evento.teste';
+            $status = $this->wirecardRepository->createStatus($order_id, 'aa', $reference, $event);
+            return $ownId;
+        } catch (\Exception $e) {
+            session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());
+            return redirect()->route('shop.checkout.cart.index');
+        }
     }
+
+    public function createWebhook(){
+        try {
+            $createWebhook = $this->wirecard->createWebhook();
+            return $createWebhook;
+        } catch (\Exception $e) {
+            session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());
+            return redirect()->route('shop.checkout.cart.index');
+        }
+    }
+
+    public function listWebhook(){
+        try {
+            $listWebhook = $this->wirecard->listWebhook();
+            return $listWebhook;
+        } catch (\Exception $e) {
+            session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());
+            return redirect()->route('shop.checkout.cart.index');
+        }
+    }
+
+    public function deleteWebhook($notification_id){
+        try {
+            $deleteWebhook = $this->wirecard->deleteWebhook($notification_id);
+            return $deleteWebhook;
+        } catch (\Exception $e) {
+            session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());
+            return redirect()->route('shop.checkout.cart.index');
+        }
+    }
+
 }
