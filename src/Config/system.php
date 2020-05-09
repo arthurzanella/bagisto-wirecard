@@ -35,6 +35,12 @@ return [
                 'validation' => 'required',
                 'info' => ''
             ], [
+                'name' => 'webhook_url',
+                'title' => 'Webhook URL',
+                'type' => 'text',
+                'validation' => '',
+                'info' => 'Criar webhook: /wirecard/createwebhook; Listar webhooks: /wirecard/listwebhook; Remover webhook: /wirecard/deletewebhook/{notification_id}'
+            ], [
                 'name' => 'public_key',
                 'title' => 'Public Key',
                 'type' => 'textarea',

@@ -47,6 +47,7 @@ class Wirecard extends Payment
         $this->key = $this->getConfigData('key');
         $this->sandbox = $this->getConfigData('sandbox');
         $this->store_name = $this->getConfigData('store_name');
+        $this->webhook_url = $this->getConfigData('webhook_url');
         $this->helper = $helper;
         $this->currentUser = auth()->guard('customer')->user();
     }
@@ -301,9 +302,14 @@ class Wirecard extends Payment
             throw new Exception('Wirecard: Informar a Key de pagamento!');
         }
 
+        if (!$this->webhook_url) {
+            throw new Exception('Wirecard: Informar a url webhook!');
+        }
+
         $token = $this->token;
         $key = $this->key;
         $store_name = $this->store_name;
+        $webhook_url = $this->webhook_url;
 
         if($this->sandbox == true){
             $endpoint = Moip::ENDPOINT_SANDBOX;
@@ -316,7 +322,7 @@ class Wirecard extends Payment
         $notification = $moip->notifications()
             ->addEvent("ORDER.*")
             //->addEvent("PAYMENT.*")
-            ->setTarget("https://enxqdbzzs1k8n.x.pipedream.net")
+            ->setTarget($webhook_url)
             ->create();
 
         dd($notification);
@@ -340,6 +346,7 @@ class Wirecard extends Payment
         $token = $this->token;
         $key = $this->key;
         $store_name = $this->store_name;
+        $webhook_url = $this->webhook_url;
 
         if($this->sandbox == true){
             $endpoint = Moip::ENDPOINT_SANDBOX;
@@ -372,6 +379,7 @@ class Wirecard extends Payment
         $token = $this->token;
         $key = $this->key;
         $store_name = $this->store_name;
+        $webhook_url = $this->webhook_url;
 
         if($this->sandbox == true){
             $endpoint = Moip::ENDPOINT_SANDBOX;
