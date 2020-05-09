@@ -140,13 +140,14 @@ class WirecardController extends Controller
     {
         try {
             $reference = $this->wirecard->getOwnIdNotify($request);
-            $order_id = $wirecardRepository->getOrderId($reference);
+            $order_id = $this->$wirecardRepository->getOrderId($reference);
             $event = 'evento.teste';
             $status = $this->wirecardRepository->createStatus($order_id, 'aa', $reference, $event);
-            return $ownId;
+            //return $status;
         } catch (\Exception $e) {
-            session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());
-            return redirect()->route('shop.checkout.cart.index');
+            ///session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());
+            //return redirect()->route('shop.checkout.cart.index');
+            abort(404);
         }
     }
 
