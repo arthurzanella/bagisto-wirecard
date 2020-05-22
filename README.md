@@ -6,6 +6,19 @@ Módulo para adicionar a opção de meio de pagamento Wirecard na ferramenta de 
 
 1- Run `composer require arthurzanella/bagisto-wirecard` in your bagisto project
 
+2- Não esqueça de colocar as rotas do wirecard no exceptions do `app/Http/Middleware/VerifyCsrfToken.php`:
+
+```php
+/**
+ * The URIs that should be excluded from CSRF verification.
+ *
+ * @var array
+ */
+protected $except = [
+    'wirecard/*'
+];
+```
+
 3- Rodar `php artisan config:clear` para limpar as configurações cacheadas.
 
 ## Configurações
