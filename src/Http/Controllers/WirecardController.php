@@ -123,7 +123,7 @@ class WirecardController extends Controller
         $order = $this->orderRepository->create(Cart::prepareDataForOrder());
 
         //criar um registro de status na tabela 'wirecard'
-        $status = $this->wirecardRepository->createStatus($order->id, null, $reference);
+        $status = $this->wirecardRepository->createStatus($order->id, null, $reference, null, 'order');
 
         Cart::deActivateCart();
 
@@ -138,15 +138,49 @@ class WirecardController extends Controller
      */
     public function notify(Request $request, Wirecard $wirecard)
     {
+        // try {
+        //     $reference = $this->wirecard->getOwnIdNotify($request);
+        //     $order_id = $this->$wirecardRepository->getOrderId($reference);
+        //     $event = 'evento.teste';
+        //     $status = $this->wirecardRepository->createStatus($order_id, 'aa', $reference, $event);
+        //     //return $status;
+        // } catch (\Exception $e) {
+        //     ///session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());
+        //     //return redirect()->route('shop.checkout.cart.index');
+        //     abort(404);
+        // }
+
+        // Only allow POST requests
+        // if (strtoupper($_SERVER['REQUEST_METHOD']) != 'POST') {
+        //     throw new Exception('Only POST requests are allowed');
+        // }
+        
+        // Make sure Content-Type is application/json 
+        // $content_type = isset($_SERVER['CONTENT_TYPE']) ? $_SERVER['CONTENT_TYPE'] : '';
+        // if (stripos($content_type, 'application/json') === false) {
+        //     throw new Exception('Content-Type must be application/json');
+        // }
+                
+        // Decode the JSON object
+        //$object = json_decode($request, true);
+        
+        // Throw an exception if decoding failed
+        // if (!is_array($object)) {
+        //     throw new Exception('Failed to decode JSON object');
+        // }
+
         try {
-            $reference = $this->wirecard->getOwnIdNotify($request);
-            $order_id = $this->$wirecardRepository->getOrderId($reference);
-            $event = 'evento.teste';
-            $status = $this->wirecardRepository->createStatus($order_id, 'aa', $reference, $event);
+            // funcionando mais ou menos
+            // $body = $request->getContent();
+            // $status = $this->wirecardRepository->createStatus(null, null, $body, $request->event);
+
+            // teste
+            $reference = json_decode($request->getContent(), true);
+            $status = $this->wirecardRepository->createStatus(null, $reference['resource']['order']['status'], $reference['resource']['order']['ownId'], $request->event, 'event');
+   
             //return $status;
         } catch (\Exception $e) {
-            ///session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());
-            //return redirect()->route('shop.checkout.cart.index');
+            $status = $this->wirecardRepository->createStatus(null, null, null, $e);
             abort(404);
         }
     }

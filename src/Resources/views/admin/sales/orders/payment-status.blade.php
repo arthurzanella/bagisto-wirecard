@@ -2,10 +2,8 @@
 
 $wirecardRepository = app('ArthurZanella\Wirecard\Repositories\WirecardRepository');
 
-$status = $wirecardRepository->findWhere(['order_id' => $order->id]);
 $reference = $wirecardRepository->getReference($order->id);
-//$status = $wirecardRepository->where(['order_id' => $order->id])->orderBy('created_at', 'DESC');
-//$status = $wirecardRepository->all();
+$status = $wirecardRepository->findWhere(['reference' => $reference]);
 
 ?>
 
@@ -17,7 +15,12 @@ $reference = $wirecardRepository->getReference($order->id);
         
         <span class="value" style="display: inline-grid;">
             @foreach ($status as $i)
-                @if($i->status == "CREATED")
+                @else($i->status == "PAID")
+                    <div style="margin-bottom: 0.6rem;">
+                        <span class="badge badge-md badge-success" style="font-size: 13px; margin-right: 0.5rem;">Pago</span>
+                        <small><span>{{ $i->created_at }}</span></small>
+                    </div>
+                @elseif($i->status == "CREATED")
                     <div style="margin-bottom: 0.6rem;">
                         <span class="badge badge-md badge-warning" style="font-size: 13px; margin-right: 0.5rem;">Criado</span>
                         <small><span>{{ $i->created_at }}</span></small>

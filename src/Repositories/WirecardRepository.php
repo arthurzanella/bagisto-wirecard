@@ -28,29 +28,19 @@ class WirecardRepository extends Repository
     }
 
     /**
-     * get Order Id from Order Reference
-     *
-     * @param int $id
-     * @return array
-     */
-    function getOrderId($reference)
-    {
-        return $this->model->where('reference', $reference)->groupBy('order_id')->first()->order_id;
-    }
-
-    /**
      * @param  int  $order_id
      * @param  string  $status
      * @param  string  $reference
      * @return Wirecard
      */
-    public function createStatus($order_id, $status, $reference, $event = null)
+    public function createStatus($order_id = null, $status = null, $reference = null, $event = null, $type = null)
     {
         $data = new $this->model;
         $data->order_id = $order_id;
         $data->status = $status;
         $data->reference = $reference;
         $data->event = $event;
+        $data->type = $type;
         $data->save();
         return $data;
     }
