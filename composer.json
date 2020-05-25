@@ -8,7 +8,8 @@
         }
     ],
     "require": {
-        "moip/moip-sdk-php": "^3.1"
+        "moip/moip-sdk-php": "^3.1",
+        "cagartner/bagisto-brazilcustomer": "dev-master"
         
     },
     "autoload": {
