@@ -75,11 +75,13 @@ class Wirecard extends Payment
         }
 
         if (!$this->validateCustomerDob($this->currentUser->date_of_birth)) {
-            throw new RuntimeException('Wirecard: Please update your account with Date of birth information.');
+            throw new Exception('Wirecard: Informe sua data de nascimento para continuar.');
+            return route('customer.profile.edit');
         }
 
         if (!$this->getCart()) {
-            throw new Exception('Wirecard: Adicione produtos ao carrinho para realizar o pagamento!');
+            throw new Exception('Wirecard: Informe o genero para continuar.');
+            return route('customer.profile.edit');
         }
 
         /** @var Cart $cart */
@@ -399,6 +401,16 @@ class Wirecard extends Payment
      */
     public function getRedirectUrl()
     {
+        if (!$this->validateCustomerDob($this->currentUser->date_of_birth)) {
+            session()->flash('error', 'Wirecard: Informe sua data de nascimento para continuar.');
+            return route('customer.profile.edit');
+        }
+
+        if (!$this->getCart()) {
+            session()->flash('error', 'Wirecard: Informe o genero para continuar.');
+            return route('customer.profile.edit');
+        }
+
         return route('wirecard.index');
     }
 
