@@ -15,7 +15,7 @@ $status = $wirecardRepository->findWhere(['reference' => $reference]);
         
         <span class="value" style="display: inline-grid;">
             @foreach ($status as $i)
-                @else($i->status == "PAID")
+                @if($i->status == "PAID")
                     <div style="margin-bottom: 0.6rem;">
                         <span class="badge badge-md badge-success" style="font-size: 13px; margin-right: 0.5rem;">Pago</span>
                         <small><span>{{ $i->created_at }}</span></small>

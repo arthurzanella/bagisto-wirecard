@@ -64,7 +64,7 @@ class Wirecard extends Payment
     /**
      * @throws Exception
      */
-    public function paymentRequest($hash)
+    public function paymentRequest($request)
     {
         if (!$this->token) {
             throw new Exception('Wirecard: Para usar essa opção de pagamento você precisa informar o Token pagamento!');
@@ -80,8 +80,8 @@ class Wirecard extends Payment
         }
 
         if (!$this->getCart()) {
-            throw new Exception('Wirecard: Informe o genero para continuar.');
-            return route('customer.profile.edit');
+            throw new Exception('Wirecard: Você deve adicionar produtos no carrinho..');
+            return route('shop.checkout.cart.index');
         }
 
         /** @var Cart $cart */
@@ -164,9 +164,12 @@ class Wirecard extends Payment
         // adress3 = bairro
         // adress4 = complemento
 
+        // $holder_name = $this->currentUser->customer_first_name.' '.$this->currentUser->customer_last_name;
+        // $holder_name = $cart->customer_first_name.' '.$cart->customer_last_name
         $document = $this->helper->documentParser($this->currentUser->document);
         $ddd = $this->helper->getDDD($billingAddress->phone);
         $phone = $this->helper->getPhoneNumber($billingAddress->phone);
+        $birth = $this->currentUser->date_of_birth;
 
         try {
             $customer = $moip->customers()->setOwnId(uniqid())
@@ -222,25 +225,27 @@ class Wirecard extends Payment
         }
 
         try {
-            $holder = $moip->holders()->setFullname($cart->customer_first_name.' '.$cart->customer_last_name)
-                ->setBirthDate($this->currentUser->date_of_birth)
-                ->setTaxDocument($document, 'CPF')
-                ->setPhone($ddd, $phone, 55)
-                ->setAddress(
-                    'BILLING',
-                    $shippingAddress->address1 ?: '',
-                    $shippingAddress->address2 ?: '',
-                    $shippingAddress->address3 ?: '',
-                    $shippingAddress->city ?: '',
-                    $shippingAddress->state ?: '',
-                    $shippingAddress->postcode ?: '',
-                    $shippingAddress->address4 ?: ''
-                );
+            $holder = $moip->holders()->setFullname($request->holder)
+                ->setBirthDate($request->holder_birt_date)
+                ->setTaxDocument($request->holder_cpf, 'CPF')
+                ->setPhone($request->holder_phone_ddd, $request->holder_phone_number, 55);
+                // ->setAddress(
+                //     'BILLING',
+                //     $shippingAddress->address1 ?: '',
+                //     $shippingAddress->address2 ?: '',
+                //     $shippingAddress->address3 ?: '',
+                //     $shippingAddress->city ?: '',
+                //     $shippingAddress->state ?: '',
+                //     $shippingAddress->postcode ?: '',
+                //     $shippingAddress->address4 ?: ''
+                // );
+            
+                //dd($holder);
             
             //$hash = "KT7VjDwy2CUInoAtA6i/4xO/hjsCT+gD0AeU9By0+VvFSRvkf5A7h+gvoqNrG/WdXDhUNqgpAsnkQQ1n0BkDoUzUHSfMiAnZKR7tWm/oO8QGX69o+kcnztfbkUHcrNSzHTDHX/2OVYT0GPQpsZX0wUbqwcdTa9FzaMuce44f79g66kpv/ax6upWbCx4dCJgeYkOQkpYgchhYTJgvgvRgqZHjZafDw6fWle5UrF/5uybuzISp6hR7s1qIsU9JPZdaA7fEqHz/8Gr5/G7Ot5W8S2BO3DsIz4fZ0E8bgc+E6GH2ywc8JO3PlcH4hE6hMZmUqRDK3/Nq9b1+IczeUym+Dg==";
             
             $payment = $order->payments()
-                ->setCreditCardHash($hash, $holder)
+                ->setCreditCardHash($request->hash, $holder)
                 ->setInstallmentCount(1)
                 ->setStatementDescriptor($store_name)
                 //->setDelayCapture()
@@ -407,8 +412,8 @@ class Wirecard extends Payment
         }
 
         if (!$this->getCart()) {
-            session()->flash('error', 'Wirecard: Informe o genero para continuar.');
-            return route('customer.profile.edit');
+            session()->flash('error', 'Wirecard: Você deve adicionar produtos no carrinho.');
+            return route('shop.checkout.cart.index');
         }
 
         return route('wirecard.index');

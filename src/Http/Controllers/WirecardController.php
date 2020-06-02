@@ -76,6 +76,11 @@ class WirecardController extends Controller
      */
     public function index()
     {
+        $holder_name = '';
+        $holder_document = '';
+        $holder_ddd = '';
+        $holder_phone = '';
+        $holder_birth = '';
         return view('wirecard::index', ['user' => $this->currentUser, 'billingAddress' => '']);
     }
 
@@ -89,7 +94,7 @@ class WirecardController extends Controller
     {
         try {
             //$redirect = $this->wirecard->paymentRequest($request->hash);
-            $payment = $this->wirecard->paymentRequest($request->hash);
+            $payment = $this->wirecard->paymentRequest($request);
             return redirect()->route('wirecard.success', ['reference' => $payment]);
         } catch (\Exception $e) {
             session()->flash('error', 'Ocorreu um problema: '.$e->getMessage());

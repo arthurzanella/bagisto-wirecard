@@ -45,7 +45,7 @@ SQIDAQAB
             </div>
 
             <div class="control-group" :class="[errors.has('holder') ? 'has-error' : '']">
-                <label for="holder">{{ __('Holder') }}</label>
+                <label for="holder">{{ __('Holder full name') }}</label>
                 <input type="text" class="control" name="holder" id="holder" value="{{ $user->name }}" v-validate="'required'">
                 <span class="control-error" v-if="errors.has('holder')">@{{ errors.first('holder') }}</span>
             </div>
@@ -56,30 +56,23 @@ SQIDAQAB
                 <span class="control-error" v-if="errors.has('number')">@{{ errors.first('number') }}</span>
             </div>
 
-            <div class="control-group" style="display: flex;" :class="[errors.has('month') ? 'has-error' : '']">
-                <div style="width: 50%; padding-right: 0.5rem;">
+            <div class="control-group" style="display: flex;" :class="[errors.has('month') || errors.has('year') || errors.has('cvc') ? 'has-error' : '']">
+                <div style="width: 30%; padding-right: 0.2rem;">
                     <label for="month">{{ __('Month') }}</label>
                     <input type="text" class="control" name="month" id="month" value="12" v-validate="'required'" onkeyup="getHash()">
                     <span class="control-error" v-if="errors.has('month')">@{{ errors.first('month') }}</span>
                 </div>
-                <div style="width: 50%; padding-left: 0.5rem;">
+                <div style="width: 30%; padding-left: 0.2rem;">
                     <label for="year">{{ __('Year') }}</label>
                     <input type="text" class="control" name="year" id="year" value="2022" v-validate="'required'" onkeyup="getHash()">
                     <span class="control-error" v-if="errors.has('year')">@{{ errors.first('year') }}</span>
                 </div>
+                <div style="width: 40%; padding-left: 1rem;">
+                    <label for="cvc">{{ __('CVC') }}</label>
+                    <input type="text" class="control" name="cvc" id="cvc" value="123" v-validate="'required'" onkeyup="getHash()">
+                    <span class="control-error" v-if="errors.has('cvc')">@{{ errors.first('cvc') }}</span>
+                </div>
                 
-            </div>
-
-            <div class="control-group" :class="[errors.has('cvc') ? 'has-error' : '']">
-                <label for="cvc">{{ __('CVC') }}</label>
-                <input type="text" class="control" name="cvc" id="cvc" value="123" v-validate="'required'" onkeyup="getHash()">
-                <span class="control-error" v-if="errors.has('cvc')">@{{ errors.first('cvc') }}</span>
-            </div>
-
-            <div class="button-group">
-                <button type="submit" class="btn btn-lg btn-primary">
-                    {{ __('Pay') }}
-                </button>
             </div>
 
             <!-- <hr>
@@ -87,20 +80,20 @@ SQIDAQAB
             <div class="control-group" style="margin-bottom: 0px;">
                 <div class="form-check">
                     <label class="form-check-label">
-                        <input id="holder_check" type="checkbox" class="form-check-input" value="" onchange="changeHolder()">{{ __('Edit credit card holder') }}
+                        <input id="holder_check" type="checkbox" checked="" class="form-check-input" value="" onchange="changeHolder()">{{ __('Edit credit card holder') }}
                     </label>
                 </div>
-            </div>
+            </div> -->
 
-            <div id="holder_div" class="card-body pt-0" style="display: none;">
+            <div id="holder_div" class="card-body pt-0" style="display: block;">
 
                 <h3>{{ __('Credit card holder') }}</h3>
 
-                <div class="control-group" :class="[errors.has('holder_full_name') ? 'has-error' : '']">
+                <!-- <div class="control-group" :class="[errors.has('holder_full_name') ? 'has-error' : '']">
                     <label for="holder_full_name">{{ __('Holder full name') }}</label>
                     <input type="text" class="control" name="holder_full_name" id="holder_full_name" value="{{ $user->name }}" v-validate="'required'" >
                     <span class="control-error" v-if="errors.has('holder_full_name')">@{{ errors.first('holder_full_name') }}</span>
-                </div>
+                </div> -->
 
                 <div class="control-group" :class="[errors.has('holder_birt_date') ? 'has-error' : '']">
                     <label for="holder_birt_date">{{ __('Holder birt date') }}</label>
@@ -110,23 +103,24 @@ SQIDAQAB
 
                 <div class="control-group" :class="[errors.has('holder_cpf') ? 'has-error' : '']">
                     <label for="holder_cpf">{{ __('Holder CPF') }}</label>
-                    <input type="text" class="control" name="holder_cpf" id="holder_cpf" value="{{ $user->document }}" v-validate="''" >
+                    <input type="text" class="control" name="holder_cpf" id="holder_cpf" value="{{ $user->document }}" v-validate="'required'" >
                     <span class="control-error" v-if="errors.has('holder_cpf')">@{{ errors.first('holder_cpf') }}</span>
                 </div>
 
-                <div class="control-group" :class="[errors.has('holder_phone_ddd') ? 'has-error' : '']">
-                    <label for="holder_phone_ddd">{{ __('Holder phone DDD') }}</label>
-                    <input type="text" class="control" name="holder_phone_ddd" id="holder_phone_ddd" value="" v-validate="''" >
-                    <span class="control-error" v-if="errors.has('holder_phone_ddd')">@{{ errors.first('holder_phone_ddd') }}</span>
+                <div class="control-group" style="display: flex;" :class="[errors.has('holder_phone_ddd') || errors.has('holder_phone_number') ? 'has-error' : '']">
+                    <div style="width: 40%; padding-right: 0.5rem;">
+                        <label for="holder_phone_ddd">{{ __('Holder phone DDD') }}</label>
+                        <input type="text" class="control" name="holder_phone_ddd" id="holder_phone_ddd" value="" v-validate="'required'">
+                        <span class="control-error" v-if="errors.has('holder_phone_ddd')">@{{ errors.first('holder_phone_ddd') }}</span>
+                    </div>
+                    <div style="width: 60%; padding-left: 0.5rem;">
+                        <label for="holder_phone_number">{{ __('Holder phone number') }}</label>
+                        <input type="text" class="control" name="holder_phone_number" id="holder_phone_number" value="" v-validate="'required'">
+                        <span class="control-error" v-if="errors.has('holder_phone_number')">@{{ errors.first('holder_phone_number') }}</span>
+                    </div>
                 </div>
 
-                <div class="control-group" :class="[errors.has('holder_phone_number') ? 'has-error' : '']">
-                    <label for="holder_phone_number">{{ __('Holder phone number') }}</label>
-                    <input type="text" class="control" name="holder_phone_number" id="holder_phone_number" value="" v-validate="''" >
-                    <span class="control-error" v-if="errors.has('holder_phone_number')">@{{ errors.first('holder_phone_number') }}</span>
-                </div>
-
-                <div class="control-group" :class="[errors.has('holder_address_street') ? 'has-error' : '']">
+                <!-- <div class="control-group" :class="[errors.has('holder_address_street') ? 'has-error' : '']">
                     <label for="holder_address_street">{{ __('Holder address street') }}</label>
                     <input type="text" class="control" name="holder_address_street" id="holder_address_street" value="" v-validate="''" >
                     <span class="control-error" v-if="errors.has('holder_address_street')">@{{ errors.first('holder_address_street') }}</span>
@@ -174,18 +168,24 @@ SQIDAQAB
                     <b><span class="control-error" v-if="errors.has('hash')">Confira os dados do cartão de crédito e tente novamente.</span></b>
                 </div>
 
-                <div class="control-group" style="margin-bottom: 0px;">
-                    <a href="{{ route('wirecard.cancel') }}">
-                        <i class="icon primary-back-icon"></i>
-                        {{ __('Cancel') }}
-                    </a>
-                </div>
-
-                <small class="text-secondary text-center">Pagamento processado através do Wirecard.</small>
-
                 <input type="hidden" class="form-control" name="brand" id="brand" placeholder="" required="">
 
             </div>
+
+            <div class="button-group">
+                <button type="submit" class="btn btn-lg btn-primary">
+                    {{ __('Pay') }}
+                </button>
+            </div>
+
+            <div class="control-group" style="margin-bottom: 0px;">
+                <a href="{{ route('wirecard.cancel') }}">
+                    <i class="icon primary-back-icon"></i>
+                    {{ __('Cancel') }}
+                </a>
+            </div>
+
+            <small class="text-secondary text-center">Pagamento processado através do Wirecard.</small>
 
         </div>
     </form>
